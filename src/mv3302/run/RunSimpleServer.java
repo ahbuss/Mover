@@ -35,21 +35,29 @@ public class RunSimpleServer {
         System.out.println(simpleServer);
 
         SimplePropertyDumper simplePropertyDumper = new SimplePropertyDumper(true);
-        simpleServer.addPropertyChangeListener(simplePropertyDumper);
-        arrivalProcess.addPropertyChangeListener(simplePropertyDumper);
+//        uncomment for verbose mode
+//        simpleServer.addPropertyChangeListener(simplePropertyDumper);
+//        arrivalProcess.addPropertyChangeListener(simplePropertyDumper);
         
         SimpleStatsTimeVarying numberInQueueStat = new SimpleStatsTimeVarying("numberInQueue");
         simpleServer.addPropertyChangeListener(numberInQueueStat);
         
-        Schedule.setVerbose(true);
-        Schedule.stopAtTime(20.0);
+        SimpleStatsTimeVarying numberAvailableServersStat = new SimpleStatsTimeVarying("numberAvailableServers");
+        simpleServer.addPropertyChangeListener(numberAvailableServersStat);
+        
+//        Schedule.setVerbose(true);
+//        double stopTime = 20.0;
+        double stopTime = 100000.0;
+        Schedule.stopAtTime(stopTime);
         
         Schedule.reset();
         Schedule.startSimulation();
         
-        System.out.printf("At time %,.1f there were %d served%n", Schedule.getSimTime(), simpleServer.getNumberServed());
-        System.out.printf("Average # in queue: %,.3f%n", numberInQueueStat.getMean());
-        
+        System.out.printf("Simulation ended at time %,.1f%n%n", Schedule.getSimTime());
+        System.out.printf("There have been %,d arrivals%n", arrivalProcess.getNumberArrivals());
+        System.out.printf("There have been %,d customers served%n", simpleServer.getNumberServed());
+        System.out.printf("Average # in queue:\t%,.3f%n", numberInQueueStat.getMean());
+        System.out.printf("Average utilization\t%.3f%n", (1.0 - numberAvailableServersStat.getMean()/ simpleServer.getTotalNumberServers()));
     }
 
 }
