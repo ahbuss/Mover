@@ -6,6 +6,7 @@ import mv3302.ServerWithEfficiencies;
 import simkit.Schedule;
 import simkit.random.RandomVariate;
 import simkit.random.RandomVariateFactory;
+import simkit.util.SimplePropertyDumper;
 
 /**
  *
@@ -32,6 +33,11 @@ public class RunServerWithEfficiencies {
         CustomerArrivalProcess arrivalProcess = 
                 new CustomerArrivalProcess(interarrivalTimeGenerator, serviceTimeGenerator);
         System.out.println(arrivalProcess);
+        
+        SimplePropertyDumper simplePropertyDumper = new SimplePropertyDumper(true);
+        serverWithEfficiencies.addPropertyChangeListener(simplePropertyDumper);
+        
+        arrivalProcess.addSimEventListener(serverWithEfficiencies);
         
         Schedule.setVerbose(true);
         
