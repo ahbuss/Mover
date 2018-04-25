@@ -23,7 +23,7 @@ public class CustomerArrivalProcess extends ArrivalProcess {
 
     public void doArrival() {
         super.doArrival();
-        Customer customer = new Customer(serviceTimeGenerator.generate());
+        CustomerWithServiceTime customer = new CustomerWithServiceTime(serviceTimeGenerator.generate());
         waitDelay("Arrival", 0.0, customer);
     }
     

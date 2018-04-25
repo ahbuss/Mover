@@ -6,15 +6,15 @@ import simkit.Entity;
  *
  * @author ahbuss
  */
-public class Customer extends Entity {
+public class CustomerWithServiceTime extends Entity {
 
     private double serviceTime;
 
-    public Customer() {
+    public CustomerWithServiceTime() {
         super("Customer");
     }
     
-    public Customer(double serviceTime) {
+    public CustomerWithServiceTime(double serviceTime) {
         this();
         this.setServiceTime(serviceTime);
     }

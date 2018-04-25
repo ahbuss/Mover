@@ -17,7 +17,7 @@ public class ServerWithEfficiencies extends SimEntityBase {
 
     private Server[] allServers;
 
-    protected SortedSet<Customer> queue;
+    protected SortedSet<CustomerWithServiceTime> queue;
 
     protected Set<Server> availableServers;
 
@@ -61,7 +61,7 @@ public class ServerWithEfficiencies extends SimEntityBase {
         }
     }
 
-    public void doArrival(Customer customer) {
+    public void doArrival(CustomerWithServiceTime customer) {
         customer.stampTime();
 
         queue.add(customer);
@@ -73,7 +73,7 @@ public class ServerWithEfficiencies extends SimEntityBase {
     }
 
     public void doStartService() {
-        Customer customer = queue.first();
+        CustomerWithServiceTime customer = queue.first();
         
         delayInQueue = customer.getElapsedTime();
         firePropertyChange("delayInQueue", getDelayInQueue());
@@ -89,7 +89,7 @@ public class ServerWithEfficiencies extends SimEntityBase {
         waitDelay("EndService", actualServiceTime, server, customer);
     }
     
-    public void doEndService(Server server, Customer customer) {
+    public void doEndService(Server server, CustomerWithServiceTime customer) {
         timeInSystem = customer.getElapsedTime();
         firePropertyChange("timeInSystem", getTimeInSystem());
         
@@ -117,7 +117,7 @@ public class ServerWithEfficiencies extends SimEntityBase {
     /**
      * @return the queue
      */
-    public SortedSet<Customer> getQueue() {
+    public SortedSet<CustomerWithServiceTime> getQueue() {
         return new TreeSet<>(queue);
     }
 
