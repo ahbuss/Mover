@@ -71,14 +71,14 @@ public class CancelEvenFoo extends SimEntityBase {
     }
 
     /**
-     * Cancel Foo(i) event; if i &lt; numberToCancel, schedule Cancel(i+2) with
+     * Cancel Foo(i) event; if i &lt; numberToCancel - 1, schedule Cancel(i+2) with
      * zero delay
      *
      * @param i Given parameter to be matched with the Foo event to cancel
      */
     public void doCancel(int i) {
         interrupt("Foo", i);
-        if (i < numberCancel) {
+        if (i < numberCancel - 1) {
             waitDelay("Cancel", 0.0, i + 2);
         }
     }
