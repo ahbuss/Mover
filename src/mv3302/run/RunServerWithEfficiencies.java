@@ -6,6 +6,8 @@ import mv3302.ServerWithEfficiencies;
 import simkit.Schedule;
 import simkit.random.RandomVariate;
 import simkit.random.RandomVariateFactory;
+import simkit.stat.MultipleSimpleStatsTimeVarying;
+import simkit.stat.SimpleStatsTally;
 import simkit.util.SimplePropertyDumper;
 
 /**
@@ -18,9 +20,10 @@ public class RunServerWithEfficiencies {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Server[] allServers = new Server[2];
-        allServers[0] = new Server(1.0);
-        allServers[1] = new Server(0.9);
+        Server[] allServers = new Server[3];
+        allServers[0] = new Server(1.5);
+        allServers[1] = new Server(1.5);
+        allServers[2] = new Server(1.5);
 
         ServerWithEfficiencies serverWithEfficiencies =
                 new ServerWithEfficiencies(allServers);
@@ -35,17 +38,30 @@ public class RunServerWithEfficiencies {
         System.out.println(arrivalProcess);
         
         SimplePropertyDumper simplePropertyDumper = new SimplePropertyDumper(true);
-        serverWithEfficiencies.addPropertyChangeListener(simplePropertyDumper);
+//        serverWithEfficiencies.addPropertyChangeListener(simplePropertyDumper);
         
         arrivalProcess.addSimEventListener(serverWithEfficiencies);
         
-        Schedule.setVerbose(true);
+        SimpleStatsTally delayInQueueStat = new SimpleStatsTally("delayInQueue");
+        serverWithEfficiencies.addPropertyChangeListener(delayInQueueStat);
         
-        Schedule.stopAtTime(10.0);
+        MultipleSimpleStatsTimeVarying serverBusyStat = new MultipleSimpleStatsTimeVarying("busy");
+        serverWithEfficiencies.addPropertyChangeListener(serverBusyStat);
+        
+        Schedule.setVerbose(false);
+        
+        Schedule.stopAtTime(100000.0);
         
         Schedule.reset();
         Schedule.startSimulation();
         
+        System.out.printf("Simluation ended at time %,.1f%n", Schedule.getSimTime());
+        System.out.printf("Avg delayInQueue = %,.4f%n", delayInQueueStat.getMean());
+        
+//        System.out.println(serverBusyStat);
+        for (int i = 1; i < serverBusyStat.getAllSampleStat().length; ++i) {
+            System.out.printf("Avg Utilization of server %d: %.4f%n", i, serverBusyStat.getMean(i));
+        }
 //        System.out.println(new Customer(123.456));
 //        new Customer(-1.0);
 //        for (Server server : allServers) {

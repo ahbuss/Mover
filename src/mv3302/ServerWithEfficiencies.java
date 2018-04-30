@@ -81,6 +81,7 @@ public class ServerWithEfficiencies extends SimEntityBase {
     public void doInit(int i) {
         availableServers.add(allServers[i]);
         firePropertyChange("availableServers", getAvailableServers());
+        fireIndexedPropertyChange(allServers[i].getID(), "busy", 0.0);
 
         if (i < allServers.length - 1) {
             waitDelay("Init", 0.0, HIGHER, i + 1);
@@ -124,6 +125,8 @@ public class ServerWithEfficiencies extends SimEntityBase {
         availableServers.remove(server);
         firePropertyChange("availableServers", getAvailableServers());
         
+        fireIndexedPropertyChange(server.getID(), "busy", 1.0);
+        
         double actualServiceTime = customer.getServiceTime() * server.getEfficiency();
         waitDelay("EndService", actualServiceTime, server, customer);
     }
@@ -141,6 +144,7 @@ public class ServerWithEfficiencies extends SimEntityBase {
         firePropertyChange("timeInSystem", getTimeInSystem());
         
         availableServers.add(server);
+        fireIndexedPropertyChange(server.getID(), "busy", 0.0);
         
         if (!queue.isEmpty()) {
             waitDelay("StartService", 0.0, HIGH);
