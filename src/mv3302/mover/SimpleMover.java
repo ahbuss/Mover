@@ -15,13 +15,13 @@ public class SimpleMover extends SimEntityBase implements Mover {
     private Point2D initialLocation;
     private double maxSpeed;
 
-    private Point2D lastStopLocation;
+    protected Point2D lastStopLocation;
 
-    private Point2D velocity;
+    protected Point2D velocity;
 
-    private Point2D destination;
+    protected Point2D destination;
 
-    private double startMoveTime;
+    protected double startMoveTime;
 
     public SimpleMover() {
         this.lastStopLocation = new Point2D.Double();
