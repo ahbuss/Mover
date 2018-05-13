@@ -107,7 +107,13 @@ public class SimpleRandomMoverManager extends SimEntityBase {
      * @param myMover the myMover to set
      */
     public void setMyMover(Mover myMover) {
+        if (this.myMover != null) {
+            this.removeSimEventListener(myMover);
+            this.myMover.removeSimEventListener(this);
+        }
         this.myMover = myMover;
+        this.addSimEventListener(this.myMover);
+        this.myMover.addSimEventListener(this);
     }
 
     /**

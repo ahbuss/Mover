@@ -30,9 +30,6 @@ public class TestSimplePathMoverManager {
         SimplePathMoverManager simplePathMoverManager =
                 new SimplePathMoverManager(simpleMover, path, true);
         
-        simpleMover.addSimEventListener(simplePathMoverManager);
-        simplePathMoverManager.addSimEventListener(simpleMover);
-        
         SimplePropertyDumper simplePropertyDumper = new SimplePropertyDumper(true);
         simpleMover.addPropertyChangeListener(simplePropertyDumper);
         simplePathMoverManager.addPropertyChangeListener(simplePropertyDumper);

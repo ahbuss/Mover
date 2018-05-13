@@ -78,7 +78,13 @@ public class SimplePathMoverManager extends SimEntityBase {
      * @param myMover the myMover to set
      */
     public void setMyMover(Mover myMover) {
+        if (this.myMover != null) {
+            this.removeSimEventListener(this.myMover);
+            this.myMover.removeSimEventListener(myMover);
+        }
         this.myMover = myMover;
+        this.myMover.addSimEventListener(this);
+        this.addSimEventListener(myMover);
     }
 
     /**

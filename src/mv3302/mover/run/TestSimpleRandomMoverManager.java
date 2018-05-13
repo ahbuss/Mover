@@ -32,9 +32,6 @@ public class TestSimpleRandomMoverManager {
         SimpleRandomMoverManager simpleRandomMoverManager =
                 new SimpleRandomMoverManager(simpleMover, coordinateGenerator, true);
         
-        simpleMover.addSimEventListener(simpleRandomMoverManager);
-        simpleRandomMoverManager.addSimEventListener(simpleMover);
-        
         SimplePropertyDumper simplePropertyDumper = new SimplePropertyDumper(true);
         simpleMover.addPropertyChangeListener(simplePropertyDumper);
         simpleRandomMoverManager.addPropertyChangeListener(simplePropertyDumper);
@@ -44,8 +41,10 @@ public class TestSimpleRandomMoverManager {
         
         Schedule.setVerbose(true);
         
+        Schedule.stopOnEvent(10, "EndMove", SimpleMover.class);
+        
         Schedule.reset();
-        simpleRandomMoverManager.waitDelay("Stop", 50.0);
+//        simpleRandomMoverManager.waitDelay("Stop", 50.0);
         Schedule.startSimulation();
     }
     

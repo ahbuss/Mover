@@ -30,9 +30,6 @@ public class TestSimplePatrolMoverManager {
         SimplePatrolMoverManager simplePatrolMoverManager =
                 new SimplePatrolMoverManager(simpleMover, path, true);
         
-        simpleMover.addSimEventListener(simplePatrolMoverManager);
-        simplePatrolMoverManager.addSimEventListener(simpleMover);
-        
         SimplePropertyDumper simplePropertyDumper = new SimplePropertyDumper(true);
         simpleMover.addPropertyChangeListener(simplePropertyDumper);
         simplePatrolMoverManager.addPropertyChangeListener(simplePropertyDumper);
