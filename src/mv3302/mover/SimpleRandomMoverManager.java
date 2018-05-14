@@ -32,6 +32,7 @@ public class SimpleRandomMoverManager extends SimEntityBase {
         setStartOnRun(startOnRun);
     }
 
+    @Override
     public void reset() {
         super.reset();
         this.nextDestination.setLocation(NaN, NaN);
@@ -65,7 +66,7 @@ public class SimpleRandomMoverManager extends SimEntityBase {
     }
     
     public void doStop() {
-        waitDelay("Stop", 0.0, myMover);
+            waitDelay("OrderStop", 0.0);
     }
 
     /**

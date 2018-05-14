@@ -2,6 +2,7 @@ package mv3302.mover;
 
 import java.awt.geom.Point2D;
 import static java.lang.Double.NaN;
+import static simkit.Priority.HIGH;
 import simkit.Schedule;
 import simkit.SimEntityBase;
 import simkit.smd.Mover;
@@ -107,6 +108,10 @@ public class SimpleMover extends SimEntityBase implements Mover {
         firePropertyChange("startMoveTime", oldStartMoveTime, getStartMoveTime());
     }
 
+    public void doOrderStop() {
+        waitDelay("Stop", 0.0, HIGH, this);
+    }
+    
     @Override
     public void doStop(Mover mover) {
         Point2D oldLastStopLocation = getLastStopLocation();

@@ -15,8 +15,8 @@ public class TestSimpleMover {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Point2D initialLocation = new Point2D.Double(1.2, 3.4);
-        double maxSpeed = 30.0;
+        Point2D initialLocation = new Point2D.Double(-30.0, 40.0);
+        double maxSpeed = 25.0;
         
         SimpleMover simpleMover = new SimpleMover(initialLocation, maxSpeed);
         
@@ -28,8 +28,8 @@ public class TestSimpleMover {
         Schedule.setVerbose(true);
         
         Schedule.reset();
-        simpleMover.waitDelay("MoveTo", 1.0, new Point2D.Double(10.0, 20.0));
-        simpleMover.waitDelay("Stop", 1.2, simpleMover);
+        simpleMover.waitDelay("MoveTo", 1.0, new Point2D.Double(30.0, -40.0));
+        simpleMover.waitDelay("OrderStop", 3.5);
         Schedule.startSimulation();
     }
     

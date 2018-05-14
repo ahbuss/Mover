@@ -6,6 +6,7 @@ import static java.lang.Double.max;
 import static java.lang.Double.min;
 import java.util.HashSet;
 import java.util.Set;
+import static simkit.Priority.LOW;
 import simkit.SimEntityBase;
 import simkit.smd.Mover;
 import simkit.smd.Sensor;
@@ -15,6 +16,8 @@ import simkit.smd.Sensor;
  * @author ahbuss
  */
 public class SimpleReferee extends SimEntityBase {
+
+    private static final double EPSILON = 1.0E-7;
 
     private final Set<Mover> targets;
 
@@ -43,102 +46,83 @@ public class SimpleReferee extends SimEntityBase {
     }
 
     public void doStartMove(Mover mover) {
-        updateSensors(mover);
-    }
-
-    public void doStartMove(Sensor sensor) {
-        updateTargets(sensor);
-    }
-
-    public void doStop(Mover mover) {
-        updateSensors(mover);
-    }
-
-    public void doStop(Sensor sensor) {
-        updateTargets(sensor);
-    }
-
-    private void updateTargets(Sensor sensor) {
-        Point2D sensorLocation = sensor.getCurrentLocation();
-        Point2D sensorVelocity = sensor.getVelocity();
-        for (Mover target : targets) {
-            if (target == sensor.getMover()) {
-                continue;
-            }
-            Point2D targetLocation = target.getCurrentLocation();
-            Point2D targetVelocity = target.getVelocity();
-
-            Point2D relativeLocation = new Point2D.Double(targetLocation.getX() - sensorLocation.getX(),
-                    targetLocation.getY() - sensorLocation.getY()); // x_0
-            Point2D relativeVelocity = new Point2D.Double(targetVelocity.getX() - sensorVelocity.getX(),
-                    targetVelocity.getY() - sensorVelocity.getY()); // v_0
-            double distanceSq = sensorLocation.distanceSq(targetLocation); // ||x_0||^2
-            double relativeSpeedSq = sensorVelocity.distanceSq(targetVelocity); // ||v_0||^2
-            double innerProduct = relativeLocation.getX() * relativeVelocity.getX()
-                    + relativeLocation.getY() * relativeVelocity.getY();
-
-            double[] coeff = new double[3];
-            coeff[0] = distanceSq - sensor.getMaxRange() * sensor.getMaxRange();
-            coeff[1] = 2.0 * innerProduct;
-            coeff[2] = relativeSpeedSq;
-
-            double[] times = new double[2];
-            int numberRoots = QuadCurve2D.solveQuadratic(coeff, times);
-            if (numberRoots == 2) {
-                double minTime = min(times[0], times[1]);
-                double maxTime = max(times[0], times[1]);
-                if (0.0 < minTime) {
-                    interrupt("EnterRange", target, sensor);
-                    waitDelay("EnterRange", minTime, target, sensor);
-                } else if (0.0 < maxTime) {
-                    interrupt("ExitRange", target, sensor);
-                    waitDelay("ExitRange", maxTime, target, sensor);
-                }
-            } else {
-                interrupt("EnterRange", target, sensor);
+        for (Sensor sensor : sensors) {
+            if (mover != sensor.getMover()) {
+                waitDelay("DetermineInteraction", 0.0, LOW, mover, sensor);
             }
         }
     }
 
-    private void updateSensors(Mover target) {
+    public void doStartMove(Sensor sensor) {
+        for (Mover mover : targets) {
+            if (mover != sensor.getMover()) {
+                waitDelay("DetermineInteraction", 0.0, LOW, mover, sensor);
+            }
+        }
+    }
+
+    public void doStop(Mover mover) {
+        for (Sensor sensor : sensors) {
+            if (mover != sensor.getMover()) {
+                waitDelay("DetermineInteraction", 0.0, LOW, mover, sensor);
+            }
+        }
+    }
+
+    public void doStop(Sensor sensor) {
+        for (Mover mover : targets) {
+            if (mover != sensor.getMover()) {
+                waitDelay("DetermineInteraction", 0.0, LOW, mover, sensor);
+            }
+        }
+    }
+
+    public void doDetermineInteraction(Mover target, Sensor sensor) {
+
         Point2D targetLocation = target.getCurrentLocation();
         Point2D targetVelocity = target.getVelocity();
 
-        for (Sensor sensor : sensors) {
-            if (target == sensor.getMover()) {
-                continue;
-            }
-            Point2D sensorLocation = sensor.getCurrentLocation();
-            Point2D sensorVelocity = sensor.getVelocity();
-            Point2D relativeLocation = new Point2D.Double(targetLocation.getX() - sensorLocation.getX(),
-                    targetLocation.getY() - sensorLocation.getY()); // x_0
-            Point2D relativeVelocity = new Point2D.Double(targetVelocity.getX() - sensorVelocity.getX(),
-                    targetVelocity.getY() - sensorVelocity.getY()); // v_0
-            double distanceSq = sensorLocation.distanceSq(targetLocation); // ||x_0||^2
-            double relativeSpeedSq = sensorVelocity.distanceSq(targetVelocity); // ||v_0||^2
-            double innerProduct = relativeLocation.getX() * relativeVelocity.getX()
-                    + relativeLocation.getY() * relativeVelocity.getY();
+        Point2D sensorLocation = sensor.getCurrentLocation();
+        Point2D sensorVelocity = sensor.getVelocity();
+        Point2D relativeLocation = new Point2D.Double(targetLocation.getX() - sensorLocation.getX(),
+                targetLocation.getY() - sensorLocation.getY()); // x_0
+        Point2D relativeVelocity = new Point2D.Double(targetVelocity.getX() - sensorVelocity.getX(),
+                targetVelocity.getY() - sensorVelocity.getY()); // v_0
+        double distanceSq = sensorLocation.distanceSq(targetLocation); // ||x_0||^2
+        double relativeSpeedSq = sensorVelocity.distanceSq(targetVelocity); // ||v_0||^2
+        double innerProduct = relativeLocation.getX() * relativeVelocity.getX()
+                + relativeLocation.getY() * relativeVelocity.getY();
 
-            double[] coeff = new double[3];
-            coeff[0] = distanceSq - sensor.getMaxRange() * sensor.getMaxRange();
-            coeff[1] = 2.0 * innerProduct;
-            coeff[2] = relativeSpeedSq;
-
-            double[] times = new double[2];
-            int numberRoots = QuadCurve2D.solveQuadratic(coeff, times);
-            if (numberRoots == 2) {
-                double minTime = min(times[0], times[1]);
-                double maxTime = max(times[0], times[1]);
-                if (0.0 < minTime) {
-                    interrupt("EnterRange", target, sensor);
-                    waitDelay("EnterRange", minTime, target, sensor);
-                } else if (0.0 < maxTime) {
-                    interrupt("ExitRange", target, sensor);
-                    waitDelay("ExitRange", maxTime, target, sensor);
-                }
+//            The target is traveling at the same velocity as the sensor
+//            It has stopped relative to the sensor, so interrupt pending
+//            EnterRange or ExitRange events
+        if (relativeSpeedSq < EPSILON) {
+            if (distanceSq < sensor.getMaxRange() * sensor.getMaxRange()) {
+                interrupt("ExitRange", target, sensor);
             } else {
                 interrupt("EnterRange", target, sensor);
             }
+        }
+
+        double[] coeff = new double[3];
+        coeff[0] = distanceSq - sensor.getMaxRange() * sensor.getMaxRange();
+        coeff[1] = 2.0 * innerProduct;
+        coeff[2] = relativeSpeedSq;
+
+        double[] times = new double[2];
+        int numberRoots = QuadCurve2D.solveQuadratic(coeff, times);
+        if (numberRoots == 2) {
+            double minTime = min(times[0], times[1]);
+            double maxTime = max(times[0], times[1]);
+            if (0.0 < minTime) {
+                interrupt("EnterRange", target, sensor);
+                waitDelay("EnterRange", minTime, target, sensor);
+            } else if (0.0 < maxTime) {
+                interrupt("ExitRange", target, sensor);
+                waitDelay("ExitRange", maxTime, target, sensor);
+            }
+        } else {
+            interrupt("EnterRange", target, sensor);
         }
     }
 

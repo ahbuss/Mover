@@ -64,7 +64,7 @@ public class SimplePathMoverManager extends SimEntityBase {
     }
     
     public void doStop() {
-            waitDelay("Stop", 0.0, myMover);
+            waitDelay("OrderStop", 0.0);
     }
     
     /**
