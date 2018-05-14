@@ -16,7 +16,7 @@ public class SimpleRandomMoverManager extends SimEntityBase {
 
     private RandomVariate[] coordinateGenerator;
 
-    private Mover myMover;
+    private Mover mover;
 
     protected Point2D nextDestination;
 
@@ -24,10 +24,10 @@ public class SimpleRandomMoverManager extends SimEntityBase {
         this.nextDestination = new Point2D.Double(NaN, NaN);
     }
 
-    public SimpleRandomMoverManager(Mover myMover, RandomVariate[] coordinateGenerator,
+    public SimpleRandomMoverManager(Mover mover, RandomVariate[] coordinateGenerator,
             boolean startOnRun) {
         this();
-        setMyMover(myMover);
+        setMover(mover);
         setCoordinateGenerator(coordinateGenerator);
         setStartOnRun(startOnRun);
     }
@@ -98,23 +98,23 @@ public class SimpleRandomMoverManager extends SimEntityBase {
     }
 
     /**
-     * @return the myMover
+     * @return the mover
      */
-    public Mover getMyMover() {
-        return myMover;
+    public Mover getMover() {
+        return mover;
     }
 
     /**
-     * @param myMover the myMover to set
+     * @param mover the mover to set
      */
-    public void setMyMover(Mover myMover) {
-        if (this.myMover != null) {
-            this.removeSimEventListener(myMover);
-            this.myMover.removeSimEventListener(this);
+    public void setMover(Mover mover) {
+        if (this.mover != null) {
+            this.removeSimEventListener(mover);
+            this.mover.removeSimEventListener(this);
         }
-        this.myMover = myMover;
-        this.addSimEventListener(this.myMover);
-        this.myMover.addSimEventListener(this);
+        this.mover = mover;
+        this.addSimEventListener(this.mover);
+        this.mover.addSimEventListener(this);
     }
 
     /**

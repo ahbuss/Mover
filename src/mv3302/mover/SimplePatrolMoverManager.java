@@ -14,9 +14,9 @@ public class SimplePatrolMoverManager extends SimplePathMoverManager {
         super();
     }
     
-    public SimplePatrolMoverManager(Mover myMover, List<Point2D> path, boolean startOnRun) {
+    public SimplePatrolMoverManager(Mover mover, List<Point2D> path, boolean startOnRun) {
         this();
-        setMyMover(myMover);
+        setMover(mover);
         setPath(path);
         setStartOnRun(startOnRun);
     }

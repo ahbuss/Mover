@@ -1,10 +1,7 @@
 package mv3302.mover.run;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.List;
 import mv3302.mover.SimpleMover;
-import mv3302.mover.SimplePathMoverManager;
 import mv3302.mover.SimpleRandomMoverManager;
 import simkit.Schedule;
 import simkit.random.RandomVariate;

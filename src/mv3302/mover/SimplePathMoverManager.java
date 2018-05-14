@@ -13,7 +13,7 @@ import simkit.smd.Mover;
  */
 public class SimplePathMoverManager extends SimEntityBase {
     
-    private Mover myMover;
+    private Mover mover;
     
     private boolean startOnRun;
     
@@ -24,7 +24,7 @@ public class SimplePathMoverManager extends SimEntityBase {
     public SimplePathMoverManager() { }
     
     public SimplePathMoverManager(Mover myMover, List<Point2D> path, boolean startOnRun) {
-        setMyMover(myMover);
+        setMover(myMover);
         setPath(path);
         setStartOnRun(startOnRun);
     }
@@ -68,23 +68,23 @@ public class SimplePathMoverManager extends SimEntityBase {
     }
     
     /**
-     * @return the myMover
+     * @return the mover
      */
-    public Mover getMyMover() {
-        return myMover;
+    public Mover getMover() {
+        return mover;
     }
 
     /**
-     * @param myMover the myMover to set
+     * @param mover the mover to set
      */
-    public void setMyMover(Mover myMover) {
-        if (this.myMover != null) {
-            this.removeSimEventListener(this.myMover);
-            this.myMover.removeSimEventListener(myMover);
+    public void setMover(Mover mover) {
+        if (this.mover != null) {
+            this.removeSimEventListener(this.mover);
+            this.mover.removeSimEventListener(mover);
         }
-        this.myMover = myMover;
-        this.myMover.addSimEventListener(this);
-        this.addSimEventListener(myMover);
+        this.mover = mover;
+        this.mover.addSimEventListener(this);
+        this.addSimEventListener(mover);
     }
 
     /**
