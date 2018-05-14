@@ -94,6 +94,8 @@ public class SimpleReferee extends SimEntityBase {
                     interrupt("ExitRange", target, sensor);
                     waitDelay("ExitRange", maxTime, target, sensor);
                 }
+            } else {
+                interrupt("EnterRange", target, sensor);
             }
         }
     }
@@ -134,6 +136,8 @@ public class SimpleReferee extends SimEntityBase {
                     interrupt("ExitRange", target, sensor);
                     waitDelay("ExitRange", maxTime, target, sensor);
                 }
+            } else {
+                interrupt("EnterRange", target, sensor);
             }
         }
     }
