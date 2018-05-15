@@ -63,7 +63,7 @@ public class SimpleReferee extends SimEntityBase {
     public void doStartMove(Mover mover) {
         for (Sensor sensor : sensors) {
             if (mover != sensor.getMover()) {
-                waitDelay("DetermineInteraction", 0.0, LOW, mover, sensor);
+                waitDelay("Interact", 0.0, LOW, mover, sensor);
             }
         }
     }
@@ -71,7 +71,7 @@ public class SimpleReferee extends SimEntityBase {
     public void doStartMove(Sensor sensor) {
         for (Mover mover : targets) {
             if (mover != sensor.getMover()) {
-                waitDelay("DetermineInteraction", 0.0, LOW, mover, sensor);
+                waitDelay("Interact", 0.0, LOW, mover, sensor);
             }
         }
     }
@@ -79,7 +79,7 @@ public class SimpleReferee extends SimEntityBase {
     public void doStop(Mover mover) {
         for (Sensor sensor : sensors) {
             if (mover != sensor.getMover()) {
-                waitDelay("DetermineInteraction", 0.0, LOW, mover, sensor);
+                waitDelay("Interact", 0.0, LOW, mover, sensor);
             }
         }
     }
@@ -87,12 +87,12 @@ public class SimpleReferee extends SimEntityBase {
     public void doStop(Sensor sensor) {
         for (Mover mover : targets) {
             if (mover != sensor.getMover()) {
-                waitDelay("DetermineInteraction", 0.0, LOW, mover, sensor);
+                waitDelay("Interact", 0.0, LOW, mover, sensor);
             }
         }
     }
 
-    public void doDetermineInteraction(Mover target, Sensor sensor) {
+    public void doInteract(Mover target, Sensor sensor) {
 
         Point2D targetLocation = target.getCurrentLocation();
         Point2D targetVelocity = target.getVelocity();
