@@ -44,14 +44,14 @@ public class SimpleReferee extends SimEntityBase {
             this.addSimEventListener(mediator);
         }
     }
-    
+
     public void doRun() {
         waitDelay("Initialize", 0.0, LOW);
     }
-    
+
     public void doInitialize() {
-        for (Mover target: targets) {
-            for (Sensor sensor: sensors) {
+        for (Mover target : targets) {
+            for (Sensor sensor : sensors) {
                 double distance = target.getCurrentLocation().distance(sensor.getCurrentLocation());
                 if (target != sensor.getMover() && distance < sensor.getMaxRange()) {
                     waitDelay("EnterRange", 0.0, target, sensor);
@@ -164,8 +164,10 @@ public class SimpleReferee extends SimEntityBase {
         int numberRoots = QuadCurve2D.solveQuadratic(coeff, times);
         if (numberRoots == 2) {
             double maxTime = max(times[0], times[1]);
-            interrupt("ExitRange", target, sensor);
-            waitDelay("ExitRange", maxTime, target, sensor);
+            if (maxTime > 0.0) {
+                interrupt("ExitRange", target, sensor);
+                waitDelay("ExitRange", maxTime, target, sensor);
+            }
         }
     }
 
