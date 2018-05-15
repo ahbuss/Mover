@@ -44,6 +44,21 @@ public class SimpleReferee extends SimEntityBase {
             this.addSimEventListener(mediator);
         }
     }
+    
+    public void doRun() {
+        waitDelay("Initialize", 0.0, LOW);
+    }
+    
+    public void doInitialize() {
+        for (Mover target: targets) {
+            for (Sensor sensor: sensors) {
+                double distance = target.getCurrentLocation().distance(sensor.getCurrentLocation());
+                if (target != sensor.getMover() && distance < sensor.getMaxRange()) {
+                    waitDelay("EnterRange", 0.0, target, sensor);
+                }
+            }
+        }
+    }
 
     public void doStartMove(Mover mover) {
         for (Sensor sensor : sensors) {
