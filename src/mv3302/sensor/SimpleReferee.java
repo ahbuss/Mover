@@ -152,7 +152,6 @@ public class SimpleReferee extends SimEntityBase {
         if (numberRoots == 2) {
             double maxTime = max(times[0], times[1]);
             if (maxTime > 0.0) {
-                interrupt("ExitRange", target, sensor);
                 waitDelay("ExitRange", maxTime, target, sensor);
             }
         }
