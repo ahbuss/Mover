@@ -31,20 +31,6 @@ public class SimpleReferee extends SimEntityBase {
         mediators = new HashSet<>();
     }
 
-    @Override
-    public void reset() {
-        super.reset();
-        for (Sensor sensor : sensors) {
-            sensor.addSimEventListener(this);
-        }
-        for (Mover target : targets) {
-            target.addSimEventListener(this);
-        }
-        for (SimpleMediator mediator : mediators) {
-            this.addSimEventListener(mediator);
-        }
-    }
-
     public void doRun() {
         waitDelay("Initialize", 0.0, LOW);
     }
@@ -117,27 +103,28 @@ public class SimpleReferee extends SimEntityBase {
             } else {
                 interrupt("EnterRange", target, sensor);
             }
-        }
-
-        double[] coeff = new double[3];
-        coeff[0] = distanceSq - sensor.getMaxRange() * sensor.getMaxRange();
-        coeff[1] = 2.0 * innerProduct;
-        coeff[2] = relativeSpeedSq;
-
-        double[] times = new double[2];
-        int numberRoots = QuadCurve2D.solveQuadratic(coeff, times);
-        if (numberRoots == 2) {
-            double minTime = min(times[0], times[1]);
-            double maxTime = max(times[0], times[1]);
-            if (0.0 < minTime) {
-                interrupt("EnterRange", target, sensor);
-                waitDelay("EnterRange", minTime, target, sensor);
-            } else if (0.0 < maxTime) {
-                interrupt("ExitRange", target, sensor);
-                waitDelay("ExitRange", maxTime, target, sensor);
-            }
         } else {
-            interrupt("EnterRange", target, sensor);
+
+            double[] coeff = new double[3];
+            coeff[0] = distanceSq - sensor.getMaxRange() * sensor.getMaxRange();
+            coeff[1] = 2.0 * innerProduct;
+            coeff[2] = relativeSpeedSq;
+
+            double[] times = new double[2];
+            int numberRoots = QuadCurve2D.solveQuadratic(coeff, times);
+            if (numberRoots == 2) {
+                double minTime = min(times[0], times[1]);
+                double maxTime = max(times[0], times[1]);
+                if (0.0 < minTime) {
+                    interrupt("EnterRange", target, sensor);
+                    waitDelay("EnterRange", minTime, target, sensor);
+                } else if (0.0 < maxTime) {
+                    interrupt("ExitRange", target, sensor);
+                    waitDelay("ExitRange", maxTime, target, sensor);
+                }
+            } else {
+                interrupt("EnterRange", target, sensor);
+            }
         }
     }
 
@@ -190,6 +177,9 @@ public class SimpleReferee extends SimEntityBase {
      */
     public void setTargets(Set<Mover> targets) {
         this.targets.addAll(targets);
+        for (Mover target : targets) {
+            target.addSimEventListener(this);
+        }
     }
 
     /**
@@ -197,6 +187,10 @@ public class SimpleReferee extends SimEntityBase {
      */
     public void setSensors(Set<Sensor> sensors) {
         this.sensors.addAll(sensors);
+        for (Sensor sensor : sensors) {
+            sensor.addSimEventListener(this);
+        }
+
     }
 
     /**
@@ -211,6 +205,9 @@ public class SimpleReferee extends SimEntityBase {
      */
     public void setMediators(Set<SimpleMediator> mediators) {
         this.mediators.addAll(mediators);
+        for (SimpleMediator mediator : mediators) {
+            this.addSimEventListener(mediator);
+        }
     }
 
 }
