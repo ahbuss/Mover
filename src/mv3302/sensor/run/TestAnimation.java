@@ -36,17 +36,19 @@ public class TestAnimation {
         Mover[] movers = new Mover[]{
             new SimpleMover(new Point2D.Double(0.0, 0.0), 30.0),
             new SimpleMover(new Point2D.Double(100.0, 0.0), 25.0),
-            new SimpleMover(new Point2D.Double(-10.0, 35.0), 40.0)
+            new SimpleMover(new Point2D.Double(-100.0, 35.0), 40.0)
         };
 
         Sensor[] sensors = new Sensor[movers.length];
-        sensors[0] = new SimpleCookieCutterSensor(movers[0], 10.0);
-        sensors[1] = new SimpleConstantTimeSensor(movers[1], 15.0, 0.2);
-        sensors[2] = new SimpleConstantRateSensor(movers[2], 15.0, 0.25);
+        sensors[0] = new SimpleCookieCutterSensor(movers[0], 30.0);
+        sensors[1] = new SimpleConstantTimeSensor(movers[1], 45.0, 0.2);
+        sensors[2] = new SimpleConstantRateSensor(movers[2], 55.0, 0.25);
 
         Point2D[] path1 = new Point2D[]{
             new Point2D.Double(150.0, 0.0),
-            new Point2D.Double(-100, 0.0)
+            new Point2D.Double(50.0, 100.0),
+            new Point2D.Double(-100, 0.0),
+            new Point2D.Double(0, -100.0)
         };
         SimplePatrolMoverManager moverManager1
                 = new SimplePatrolMoverManager(movers[0], Arrays.asList(path1), true);
@@ -61,8 +63,8 @@ public class TestAnimation {
                 = new SimplePatrolMoverManager(movers[1], Arrays.asList(path2), true);
 
         RandomVariate[] rv = new RandomVariate[]{
-            RandomVariateFactory.getInstance("Uniform", -50.0, 50.0),
-            RandomVariateFactory.getInstance("Uniform", -75, 75.0)
+            RandomVariateFactory.getInstance("Uniform", -100.0, 150.0),
+            RandomVariateFactory.getInstance("Uniform", -75, 175.0)
         };
 
         SimpleRandomMoverManager moverManager3
