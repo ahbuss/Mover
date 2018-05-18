@@ -180,6 +180,20 @@ public class SimpleMover extends SimEntityBase implements Mover {
         return startMoveTime;
     }
     
+    public void setInitialX(double x) {
+        if (initialLocation == null) {
+            initialLocation = new Point2D.Double();
+        }
+        initialLocation.setLocation(x, initialLocation.getY());
+    }
+    
+    public void setInitialY(double y) {
+        if (initialLocation == null) {
+            initialLocation = new Point2D.Double();
+        }
+        initialLocation.setLocation(initialLocation.getX(), y);
+    }
+    
     @Override
     public String toString() {
         Point2D currentLocation = getCurrentLocation();
