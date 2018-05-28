@@ -17,22 +17,26 @@ public class Seeker extends SimEntityBase {
     private Sensor sensor;
 
     private int numberToFind;
-    
+
     private SimpleRandomMoverManager moverManager;
-    
+
+    private double criterion;
+
     protected Set<Mover> foundTargets;
-    
-    public Seeker() { 
+
+    public Seeker() {
         this.foundTargets = new LinkedHashSet<>();
     }
-    
-    public Seeker(Sensor sensor, SimpleRandomMoverManager moverManager, int numberToFind) {
+
+    public Seeker(Sensor sensor, SimpleRandomMoverManager moverManager, int numberToFind,
+            double criterion) {
         this();
         setSensor(sensor);
         setNumberToFind(numberToFind);
         this.setMoverManager(moverManager);
+        this.setCriterion(criterion);
     }
-    
+
     @Override
     public void reset() {
         super.reset();
@@ -40,21 +44,21 @@ public class Seeker extends SimEntityBase {
         this.moverManager.setMover(sensor.getMover());
         this.moverManager.setStartOnRun(true);
     }
-    
+
     public void doRun() {
         firePropertyChange("foundTargets", getFoundTargets());
     }
-    
+
     public void doDetection(Mover target) {
         Set<Mover> oldFoundTargets = getFoundTargets();
         this.foundTargets.add(target);
         firePropertyChange("foundTargets", oldFoundTargets, getFoundTargets());
-        
+
         if (foundTargets.size() == numberToFind) {
             waitDelay("Stop", 0.0);
         }
     }
-    
+
     public void doStop() {
         firePropertyChange("timeToFindAll", Schedule.getSimTime());
     }
@@ -108,6 +112,20 @@ public class Seeker extends SimEntityBase {
      */
     public Set<Mover> getFoundTargets() {
         return new LinkedHashSet<>(foundTargets);
+    }
+
+    /**
+     * @return the criterion
+     */
+    public double getCriterion() {
+        return criterion;
+    }
+
+    /**
+     * @param criterion the criterion to set
+     */
+    public void setCriterion(double criterion) {
+        this.criterion = criterion;
     }
 
 }
